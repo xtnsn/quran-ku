@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tahfidz Tracker</string>
+    <string name="title_activity_main">Tahfidz Tracker</string>
+    <string name="package_name">com.tahfidztracker.app</string>
+    <string name="custom_url_scheme">com.tahfidztracker.app</string>
+</resources>

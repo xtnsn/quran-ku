@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tahfidz Tracker - Pencatat & Pemantau Hafalan Al-Quran</title>
+  
+  <!-- SEO & PWA Meta -->
+  <meta name="description" content="Aplikasi Android pencatatan dan pemantauan hafalan Al-Quran santri digital dengan sistem validasi guru, peta hafalan 30 juz, dan Al-Quran interaktif.">
+  <meta name="theme-color" content="#2E86DE">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+
+  <!-- Typography: Plus Jakarta Sans (Modern UI) & Amiri (Quran Arabic) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="./src/css/main.css">
+  <link rel="stylesheet" href="./src/css/navigation.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/quran.css">
+  <link rel="stylesheet" href="./src/css/dashboard.css">
+</head>
+<body>
+
+  <!-- Android Mobile Frame Simulation Container -->
+  <div id="app-container">
+    <!-- Header Bar (Brand, User Title, Role Chip) -->
+    <header id="app-header" class="app-header"></header>
+
+    <!-- Main Viewport Scroll Area (Loads Route Content) -->
+    <main id="main-viewport" role="main"></main>
+
+    <!-- Floating Audio Mini-Bar (Active when playing) -->
+    <div id="audio-mini-bar" class="audio-mini-bar" style="display: none;"></div>
+
+    <!-- Android Bottom Navigation Bar -->
+    <nav id="bottom-nav" class="bottom-nav" aria-label="Navigasi Utama"></nav>
+
+    <!-- Bottom Sheet Modal Container -->
+    <div id="sheet-backdrop" class="sheet-backdrop"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+  </div>
+
+  <!-- Application Bootstrap (ES Module) -->
+  <script type="module" src="./src/js/app.js"></script>
+</body>
+</html>

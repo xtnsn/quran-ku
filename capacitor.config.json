@@ -1,0 +1,20 @@
+{
+  "appId": "com.tahfidztracker.app",
+  "appName": "Tahfidz Tracker",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  },
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#2E86DE",
+      "showSpinner": false
+    }
+  }
+}

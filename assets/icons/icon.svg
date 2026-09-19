@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E86DE" />
+      <stop offset="100%" stop-color="#1B6CA8" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0C447C" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#blueGrad)" />
+  <g filter="url(#shadow)">
+    <!-- Quran Book Silhouette -->
+    <path d="M128 140 C128 120, 144 104, 164 104 L348 104 C368 104, 384 120, 384 140 L384 380 C384 396, 368 408, 348 408 L164 408 C144 408, 128 396, 128 380 Z" fill="#FFFFFF" opacity="0.95" />
+    <!-- Book Center Fold -->
+    <path d="M256 104 L256 408" stroke="#D6E6F7" stroke-width="4" stroke-linecap="round" />
+    <!-- Golden Star / Calligraphy accent -->
+    <circle cx="256" cy="240" r="48" fill="#E6F1FB" />
+    <path d="M256 208 L264 228 L286 228 L268 242 L274 264 L256 250 L238 264 L244 242 L226 228 L248 228 Z" fill="#2E86DE" />
+    <!-- Lines for Quran verses -->
+    <line x1="160" y1="310" x2="230" y2="310" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round" />
+    <line x1="160" y1="335" x2="215" y2="335" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round" />
+    <line x1="282" y1="310" x2="352" y2="310" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round" />
+    <line x1="297" y1="335" x2="352" y2="335" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round" />
+  </g>
+</svg>

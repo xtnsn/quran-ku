@@ -1,0 +1,35 @@
+{
+  "name": "tahfidz-tracker",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Aplikasi Android Pencatat & Pemantau Hafalan Al-Quran Santri (PRD v2)",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev": "npx serve -l 3000 .",
+    "build": "node build.js",
+    "cap:sync": "node build.js && npx cap sync",
+    "cap:android": "npx cap open android"
+  },
+  "keywords": [
+    "quran",
+    "tahfidz",
+    "hafalan",
+    "android",
+    "pwa",
+    "capacitor"
+  ],
+  "author": "Tahfidz Tracker Team",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.3",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@supabase/supabase-js": "^2.116.0",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

@@ -1,0 +1,40 @@
+﻿# Dependencies
+node_modules/
+
+# Build outputs
+www/
+dist/
+build/
+
+# Environment & Sensitive files (Password database Supabase)
+.env
+.env.local
+.env.*.local
+database/reset_admin.js
+database/migrate.js
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS Temporary Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Android local properties & build
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
