@@ -348,11 +348,24 @@
 /* Guru / Class Management Cards (PRD 6.3) */
 .class-card {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 16px;
   margin-bottom: 12px;
   box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.class-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 16px rgba(46, 134, 222, 0.12);
+  transform: translateY(-2px);
+}
+
+.class-card:active {
+  transform: scale(0.985);
 }
 
 .class-card-top {

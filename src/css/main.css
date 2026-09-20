@@ -70,6 +70,7 @@
 html, body {
   width: 100%;
   height: 100%;
+  height: 100dvh;
   background-color: #E2ECF7;
   font-family: var(--font-sans);
   color: var(--text-dark);
@@ -83,7 +84,8 @@ html, body {
 #app-container {
   width: 100%;
   max-width: var(--app-max-width);
-  height: 100vh;
+  height: 100%;
+  height: 100dvh;
   margin: 0 auto;
   background-color: var(--bg-page);
   position: relative;
@@ -97,6 +99,7 @@ html, body {
   #app-container {
     max-width: 100%;
     height: 100%;
+    height: 100dvh;
     box-shadow: none;
   }
 }
@@ -107,7 +110,7 @@ html, body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: calc(var(--bottom-nav-height) + 24px);
+  padding-bottom: calc(var(--bottom-nav-height) + 24px + env(safe-area-inset-bottom, 0px));
   position: relative;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -300,3 +303,168 @@ html, body {
 .animate-slide {
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ========================================================
+   SPLASH SCREEN / LOADING SCREEN (open-app.jpg)
+   ======================================================== */
+.splash-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background-color: #1A365D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
+}
+
+.splash-screen-overlay.splash-fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-screen-body {
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: #0F172A;
+}
+
+.splash-screen-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.splash-screen-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px 20px 40px 20px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(15, 23, 42, 0.85) 40%, rgba(15, 23, 42, 0.98) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.splash-screen-loader {
+  width: 32px;
+  height: 32px;
+  border: 3.5px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #38BDF8;
+  border-radius: 50%;
+  animation: spinLoader 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spinLoader {
+  to { transform: rotate(360deg); }
+}
+
+.splash-screen-title {
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.splash-screen-sub {
+  color: #94A3B8;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ========================================================
+   MULTI-SURAH CHECKLIST & REPORT TABLE STYLES
+   ======================================================== */
+.multi-surah-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  margin-bottom: 14px;
+}
+
+.multi-surah-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-surah-item:hover {
+  border-color: var(--color-primary);
+  background-color: #F8FAFD;
+}
+
+.multi-surah-item.checked {
+  border-color: var(--color-success) !important;
+  background-color: rgba(46, 204, 113, 0.12) !important;
+}
+
+.multi-surah-item.lunas {
+  background-color: #F0FDF4;
+  border-color: #86EFAC;
+}
+
+/* Report Table */
+.report-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin-top: 10px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.report-table th {
+  background-color: var(--color-primary-soft);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.report-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-dark);
+}
+
+.report-table tr:hover td {
+  background-color: #F8FAFD;
+}
+

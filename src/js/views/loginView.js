@@ -10,18 +10,12 @@ export function renderLoginView() {
   return `
     <div class="login-page-container animate-fade" style="padding: 24px 20px; min-height: 100%; display: flex; flex-direction: column; justify-content: center;">
       <!-- Brand Logo Header -->
-      <div style="text-align: center; margin-bottom: 28px;">
-        <div style="width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(46, 134, 222, 0.35);">
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            <path d="M12 6v6"></path>
-            <path d="M9 9h6"></path>
-          </svg>
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 84px; height: 84px; border-radius: 20px; background: #FFFFFF; margin: 0 auto 14px auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(46, 134, 222, 0.25); border: 1.5px solid var(--border-color); overflow: hidden; padding: 6px;">
+          <img src="./assets/icons/logo-sekolah.png" alt="Logo MI Al-Hidayah 1" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
-        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px;">Tahfidz Tracker</h1>
-        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Pencatatan & Pemantauan Hafalan Al-Quran Digital</p>
-        <span class="badge badge-primary" style="margin-top: 8px;">PRD Versi 2.0</span>
+        <h1 style="font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">MI Al-Hidayah 1</h1>
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Pencatatan & Pemantauan Hafalan Al-Quran</p>
       </div>
 
       <!-- Login Card -->

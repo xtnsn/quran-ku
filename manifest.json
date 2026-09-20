@@ -1,7 +1,7 @@
 {
-  "name": "Tahfidz Tracker",
-  "short_name": "Tahfidz",
-  "description": "Aplikasi Pencatat & Pemantau Hafalan Al-Quran Santri",
+  "name": "MI Al-Hidayah 1",
+  "short_name": "MI Al-Hidayah 1",
+  "description": "Aplikasi Pencatat & Pemantau Hafalan Al-Quran Murid MI Al-Hidayah 1",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",

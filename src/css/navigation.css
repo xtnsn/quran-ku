@@ -25,17 +25,22 @@
 }
 
 .header-logo {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
-  font-weight: 800;
-  font-size: 18px;
-  box-shadow: 0 4px 10px rgba(46, 134, 222, 0.3);
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(12, 68, 124, 0.12);
+  border: 1px solid var(--border-color);
+}
+
+.header-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .header-title-group h1 {

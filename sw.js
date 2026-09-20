@@ -1,5 +1,5 @@
 // Service Worker for Tahfidz Tracker (PRD v2)
-const CACHE_NAME = 'tahfidz-tracker-v10';
+const CACHE_NAME = 'tahfidz-tracker-v17';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

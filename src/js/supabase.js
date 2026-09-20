@@ -273,12 +273,28 @@ class SupabaseService {
   // --- Progress Hafalan ---
   async getProgress() {
     try {
-      const resp = await fetch(`${this.url}/rest/v1/progress_hafalan?select=*`, {
-        headers: this.getHeaders()
-      });
-      if (!resp.ok) return null;
-      const data = await resp.json();
-      return data.map(p => ({
+      let allData = [];
+      let offset = 0;
+      const limit = 1000;
+      let hasMore = true;
+
+      while (hasMore) {
+        const resp = await fetch(`${this.url}/rest/v1/progress_hafalan?select=*&order=id.asc&offset=${offset}&limit=${limit}`, {
+          headers: this.getHeaders()
+        });
+        if (!resp.ok) break;
+        const data = await resp.json();
+        if (!Array.isArray(data) || data.length === 0) break;
+        allData = allData.concat(data);
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          offset += limit;
+        }
+      }
+
+      if (allData.length === 0) return null;
+      return allData.map(p => ({
         id: p.id,
         santri_id: p.santri_id,
         nomorSurat: p.nomor_surat,
@@ -296,11 +312,12 @@ class SupabaseService {
 
   async saveValidation({ santriId, nomorSurat, ayatList, guruId, catatan }) {
     try {
+      const { getJuzForVerse } = await import('./store.js');
       const rows = ayatList.map(ayat => ({
         santri_id: santriId,
         nomor_surat: nomorSurat,
         nomor_ayat: ayat,
-        nomor_juz: 30,
+        nomor_juz: getJuzForVerse ? getJuzForVerse(nomorSurat, ayat) : (nomorSurat >= 78 ? 30 : 1),
         status: 'hafal',
         dicentang_oleh: guruId,
         catatan
@@ -317,6 +334,27 @@ class SupabaseService {
       });
     } catch (e) {
       console.warn('Supabase saveValidation error:', e);
+    }
+  }
+
+  async saveValidationBulk(rows) {
+    try {
+      if (!rows || rows.length === 0) return true;
+      for (let i = 0; i < rows.length; i += 100) {
+        const chunk = rows.slice(i, i + 100);
+        await fetch(`${this.url}/rest/v1/progress_hafalan?on_conflict=santri_id,nomor_surat,nomor_ayat`, {
+          method: 'POST',
+          headers: {
+            ...this.getHeaders(),
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify(chunk)
+        });
+      }
+      return true;
+    } catch (e) {
+      console.warn('Supabase saveValidationBulk error:', e);
+      return false;
     }
   }
 
@@ -365,6 +403,32 @@ class SupabaseService {
       });
     } catch (e) {
       console.warn('Supabase createRiwayat error:', e);
+    }
+  }
+
+  async createRiwayatBulk(items) {
+    try {
+      if (!items || items.length === 0) return true;
+      const rows = items.map(item => ({
+        santri_id: item.santri_id,
+        nomor_surat: item.nomorSurat,
+        nama_surat: item.namaSurat,
+        ayat_mulai: item.ayatMulai,
+        ayat_selesai: item.ayatSelesai,
+        total_ayat: item.totalAyat,
+        status_saat_itu: item.status || 'hafal',
+        guru_id: item.guru_id,
+        catatan: item.catatan
+      }));
+      await fetch(`${this.url}/rest/v1/riwayat_setoran`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(rows)
+      });
+      return true;
+    } catch (e) {
+      console.warn('Supabase createRiwayatBulk error:', e);
+      return false;
     }
   }
 }

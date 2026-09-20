@@ -10,7 +10,7 @@ if (fs.existsSync(wwwDir)) {
 fs.mkdirSync(wwwDir, { recursive: true });
 
 // Items to copy
-const itemsToCopy = ['index.html', 'manifest.json', 'sw.js', 'src', 'assets'];
+const itemsToCopy = ['index.html', 'manifest.json', 'sw.js', 'src', 'assets', 'open-app.jpg', 'logo-sekolah.PNG'];
 
 for (const item of itemsToCopy) {
   const srcPath = path.resolve(item);

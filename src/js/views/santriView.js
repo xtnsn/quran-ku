@@ -29,7 +29,7 @@ export const santriView = {
       <div class="animate-fade" style="padding: 16px;">
         <!-- Greeting Header -->
         <div class="hero-greeting-card">
-          <span class="greeting-role-badge">SANTRI TAHFIDZ</span>
+          <span class="greeting-role-badge">MURID</span>
           <h2 class="greeting-name">Assalamu'alaikum, ${user.nama.split(' ')[0]} 👋</h2>
           <p class="greeting-desc">${studentClass ? studentClass.nama_kelas : 'Belum Terdaftar Kelas'} • Target: Juz ${user.target_juz || 30}</p>
         </div>
@@ -168,8 +168,8 @@ export const santriView = {
     return `
       <div class="animate-fade">
         <!-- Prominent Search Bar (PRD 5.4 & 6.2) -->
-        <div class="search-box-container">
-          <div class="search-input-wrapper">
+        <div class="search-box-container" style="display: flex; gap: 8px; align-items: center;">
+          <div class="search-input-wrapper" style="flex: 1;">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -177,15 +177,16 @@ export const santriView = {
             <input type="text" id="quran-search-input" class="search-input" placeholder="Cari surat (contoh: An-Nas, Al-Kahf, 18)...">
             <button type="button" id="quran-search-clear" class="search-clear-btn">&times;</button>
           </div>
+          <button class="btn btn-secondary btn-sm" id="btn-quran-adjust-font" title="Atur Ukuran Teks Huruf Al-Qur'an" style="height: 44px; padding: 0 14px; font-weight: 800; font-size: 14px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 4px; flex-shrink: 0; background-color: var(--bg-surface); border: 1.5px solid var(--border-color); color: var(--color-primary); box-shadow: var(--shadow-sm);">
+            <span>Aa</span>
+          </button>
         </div>
 
         <!-- Filter Pills Row -->
         <div class="filter-pills-row">
           <button class="filter-pill active" data-filter="all">Semua Surat (114)</button>
-          <button class="filter-pill" data-filter="juz30">Juz 30 (An-Naba - An-Nas)</button>
-          <button class="filter-pill" data-filter="juz29">Juz 29 (Al-Mulk - Al-Mursalat)</button>
-          <button class="filter-pill" data-filter="makkiyyah">Makkiyyah</button>
-          <button class="filter-pill" data-filter="madaniyyah">Madaniyyah</button>
+          <button class="filter-pill" data-filter="makkiyyah">Makiyyah</button>
+          <button class="filter-pill" data-filter="madaniyyah">Madinah</button>
         </div>
 
         <!-- Surah List Container -->
@@ -269,6 +270,13 @@ export const santriView = {
         filterAndRender();
       });
     });
+
+    const adjustFontBtn = document.getElementById('btn-quran-adjust-font');
+    if (adjustFontBtn) {
+      adjustFontBtn.addEventListener('click', () => {
+        app.showFontAdjustSheet();
+      });
+    }
   },
 
   renderSurahCards(surahs, container) {
@@ -454,7 +462,11 @@ export const santriView = {
     const backBtn = document.getElementById('btn-back-to-surah-list');
     if (backBtn) {
       backBtn.addEventListener('click', () => {
-        app.navigate('quran');
+        if (window.history && window.history.state?.route === 'quran-detail') {
+          window.history.back();
+        } else {
+          app.navigate('quran');
+        }
       });
     }
 
@@ -525,16 +537,44 @@ export const santriView = {
 
     return `
       <div class="animate-fade" style="padding: 16px;">
+        <!-- Hero Target & Progress Status Card -->
+        <div class="card" style="margin-bottom: 16px; background: linear-gradient(135deg, #0C447C 0%, #1B68B3 100%); color: #FFFFFF; border: none; box-shadow: var(--shadow-md);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div>
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255, 255, 255, 0.2); padding: 3px 8px; border-radius: 4px;">TARGET UTAMA</span>
+              <h3 style="font-size: 18px; font-weight: 800; margin-top: 6px; color: #FFFFFF;">Hafalan Juz ${user.target_juz || 30}</h3>
+            </div>
+            <div style="text-align: right;">
+              <span class="badge" style="font-size: 12px; padding: 5px 12px; font-weight: 700; background: ${progress.juz30Percentage >= 100 ? '#10B981' : 'rgba(255, 255, 255, 0.25)'}; color: #FFFFFF;">
+                ${progress.juz30Percentage >= 100 ? '🎉 100% Khatam' : `${progress.juz30Percentage}% Selesai`}
+              </span>
+            </div>
+          </div>
+
+          <!-- Target Progress Bar -->
+          <div style="background: rgba(255, 255, 255, 0.2); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 8px;">
+            <div style="background: #10B981; height: 100%; width: ${progress.juz30Percentage}%; border-radius: 999px; transition: width 0.4s ease;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: rgba(255, 255, 255, 0.9);">
+            <span>Pencapaian Juz ${user.target_juz || 30}: <strong>${progress.juz30Verses} / 564 Ayat</strong></span>
+            <span>Total 30 Juz: <strong>${progress.overallPercentage}% (${progress.totalAyatHafal} / 6.236 Ayat)</strong></span>
+          </div>
+        </div>
+
         <!-- Header Banner -->
-        <div style="margin-bottom: 16px;">
-          <h2 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">Peta Hafalan 30 Juz</h2>
-          <p style="font-size: 12.5px; color: var(--text-muted);">Pantau status pencapaian per juz Al-Qur'an secara visual.</p>
+        <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 2px;">Peta Hafalan 30 Juz</h2>
+            <p style="font-size: 12px; color: var(--text-muted);">Ketuk kotak juz untuk melihat detail pencapaian ayat.</p>
+          </div>
+          <span class="badge badge-primary" style="font-size: 11px;">30 Juz</span>
         </div>
 
         <!-- 30 Juz Grid (PRD 6.2 Tab Progress) -->
         <div class="juz-grid">
           ${progress.juzProgress.map(j => `
-            <div class="juz-card ${j.status}" data-juz-num="${j.juz}">
+            <div class="juz-card ${j.status}" data-juz-num="${j.juz}" style="cursor: pointer;">
               <div class="juz-number-label">Juz ${j.juz}</div>
               <div class="juz-percent-badge">${j.percentage}%</div>
               <div class="juz-mini-bar">
@@ -545,7 +585,7 @@ export const santriView = {
         </div>
 
         <!-- Chronological Setoran Timeline (PRD 6.2) -->
-        <div class="card">
+        <div class="card" style="margin-top: 16px;">
           <div class="card-header">
             <span class="card-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
@@ -584,19 +624,69 @@ export const santriView = {
     `;
   },
 
+  showJuzDetailSheet(jNum) {
+    const user = auth.getCurrentUser();
+    const progress = store.calculateStudentProgress(user.id);
+    const jInfo = progress.juzProgress.find(j => String(j.juz) === String(jNum));
+    if (!jInfo) return;
+
+    const content = `
+      <div style="padding: 10px 0; text-align: center;">
+        <div style="font-size: 32px; margin-bottom: 8px;">📖</div>
+        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">Informasi Juz ${jInfo.juz}</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+          ${jInfo.name} • Total ${jInfo.totalAyat} Ayat
+        </p>
+
+        <div style="background: var(--color-primary-soft); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(46, 134, 222, 0.2);">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px;">
+            <span>Progres Hafalan</span>
+            <span style="color: var(--color-primary);">${jInfo.percentage}% (${jInfo.memorizedCount}/${jInfo.totalAyat} Ayat)</span>
+          </div>
+          <div class="progress-bar-track" style="height: 8px;">
+            <div class="progress-bar-fill" style="width: ${jInfo.percentage}%;"></div>
+          </div>
+          <div style="margin-top: 8px; font-size: 12px; font-weight: 700; color: ${jInfo.percentage >= 100 ? 'var(--color-success)' : (jInfo.percentage > 0 ? 'var(--color-primary)' : 'var(--text-muted)')};">
+            ${jInfo.percentage >= 100 ? '✓ Alhamdulillah, Juz ini sudah Khatam!' : (jInfo.percentage > 0 ? '⏳ Sedang dalam proses setoran hafalan.' : '⚪ Belum ada setoran hafalan di juz ini.')}
+          </div>
+        </div>
+
+        ${jInfo.juz === 30 ? `
+          <button class="btn btn-primary btn-lg" id="btn-juz-open-quran" style="width: 100%;">
+            <span>Buka Surat-Surat Juz 30</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        ` : `
+          <button class="btn btn-secondary btn-lg" id="btn-juz-close" style="width: 100%;">
+            <span>Tutup</span>
+          </button>
+        `}
+      </div>
+    `;
+
+    app.showBottomSheet(`Detail Juz ${jInfo.juz}`, content);
+
+    const openQuranBtn = document.getElementById('btn-juz-open-quran');
+    if (openQuranBtn) {
+      openQuranBtn.addEventListener('click', () => {
+        app.closeBottomSheet();
+        app.navigate('quran');
+      });
+    }
+    const closeBtn = document.getElementById('btn-juz-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        app.closeBottomSheet();
+      });
+    }
+  },
+
   initProgressEvents() {
     document.querySelectorAll('.juz-card').forEach(card => {
       card.addEventListener('click', () => {
         const jNum = card.dataset.juzNum;
-        if (jNum === "30") {
-          app.navigate('quran');
-          // Activate Juz 30 filter
-          setTimeout(() => {
-            const pill = document.querySelector('.filter-pill[data-filter="juz30"]');
-            if (pill) pill.click();
-          }, 100);
-        } else {
-          app.showToast(`Menampilkan informasi Juz ${jNum}`, 'info');
+        if (jNum) {
+          this.showJuzDetailSheet(jNum);
         }
       });
     });
@@ -619,10 +709,10 @@ export const santriView = {
           </div>
           <h2 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">${user.nama}</h2>
           <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">@${user.username}</div>
-          <span class="badge badge-success">Status: Aktif • Peran: Santri</span>
+          <span class="badge badge-success">Status: Aktif • Peran: Murid</span>
 
           <div style="margin-top: 18px; border-top: 1px solid var(--border-light); padding-top: 14px; text-align: center;">
-            <div style="font-size: 11px; color: var(--text-muted);">Kelas Santri</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Kelas Murid</div>
             <div style="font-size: 15px; font-weight: 800; color: var(--color-primary);">${user.kelas_nama || (studentClass ? studentClass.nama_kelas : 'Belum Ditentukan')}</div>
           </div>
         </div>

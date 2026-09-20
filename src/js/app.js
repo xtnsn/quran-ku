@@ -60,17 +60,21 @@ class App {
       }
     });
 
-    // Periodic auto-sync every 4 seconds for seamless multi-device synchronization
+    // Periodic auto-sync every 60 seconds (relaxed to avoid idle glitching/battery drain)
     setInterval(() => {
       if (document.visibilityState === 'visible') {
         store.syncWithSupabase();
       }
-    }, 4000);
+    }, 60000);
 
     // Subscribe to auth changes (login / logout)
     auth.subscribe((user) => {
-      this.currentRoute = 'home';
+      const rootTab = user?.role === 'guru' ? 'classes' : (user?.role === 'developer' ? 'accounts' : 'home');
+      this.currentRoute = rootTab;
       this.currentSurahDetail = null;
+      if (window.history) {
+        window.history.replaceState({ route: rootTab, isRoot: true }, '', window.location.href);
+      }
       this.render();
     });
 
@@ -88,7 +92,7 @@ class App {
       });
     }
 
-    // Setup Android Hardware Back Button
+    // Setup Android Hardware Back Button & Browser PopState Navigation
     this.setupBackButton();
 
     // Register Service Worker if supported
@@ -98,6 +102,28 @@ class App {
           console.log('SW registration note:', err);
         });
       });
+    }
+
+    // Splash screen fade-out controller (loading screen with open-app.jpg)
+    const hideSplashScreen = () => {
+      const splash = document.getElementById('app-splash-screen');
+      if (splash && !splash.classList.contains('splash-fade-out')) {
+        splash.classList.add('splash-fade-out');
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 600);
+      }
+    };
+
+    // Smoothly display loading screen on open, fade out after sync & minimum 1.8s
+    setTimeout(hideSplashScreen, 1800);
+
+    // Initial state for browser history
+    const initialUser = auth.getCurrentUser();
+    const initialRoot = initialUser?.role === 'guru' ? 'classes' : (initialUser?.role === 'developer' ? 'accounts' : 'home');
+    if (!this.currentRoute) this.currentRoute = initialRoot;
+    if (window.history && !window.history.state) {
+      window.history.replaceState({ route: this.currentRoute, isRoot: true }, '', window.location.href);
     }
 
     // Initial sync with database on startup
@@ -117,13 +143,13 @@ class App {
     const handleBack = () => {
       // 1. If bottom sheet / modal is open, close it
       if (this.sheetBackdrop && this.sheetBackdrop.classList.contains('active')) {
-        this.closeBottomSheet();
+        this.closeBottomSheet(true);
         return;
       }
 
       // 2. If viewing surah detail, go back to quran list
       if (this.currentRoute === 'quran-detail') {
-        this.navigate('quran');
+        this.navigate('quran', false);
         return;
       }
 
@@ -138,7 +164,7 @@ class App {
       // 4. If on another tab than the root tab for the role, return to root
       const rootTab = user?.role === 'guru' ? 'classes' : (user?.role === 'developer' ? 'accounts' : 'home');
       if (this.currentRoute !== rootTab && auth.isAuthenticated()) {
-        this.navigate(rootTab);
+        this.navigate(rootTab, false);
         return;
       }
 
@@ -156,7 +182,54 @@ class App {
       }
     };
 
-    // Listen via Capacitor App plugin
+    // Standard HTML5 Browser History Navigation (Backwards in Chrome, Safari, Firefox, Desktop & Mobile)
+    window.addEventListener('popstate', (e) => {
+      if (this.isPoppingModal) {
+        this.isPoppingModal = false;
+        return;
+      }
+
+      // If bottom sheet / modal is open, close it
+      if (this.sheetBackdrop && this.sheetBackdrop.classList.contains('active')) {
+        this.closeBottomSheet(true);
+        return;
+      }
+
+      // If viewing surah detail, go back to quran list
+      if (this.currentRoute === 'quran-detail') {
+        this.navigate('quran', false);
+        return;
+      }
+
+      // If guru viewing class detail, go back to class list
+      if (guruView.selectedClassId) {
+        guruView.selectedClassId = null;
+        this.render();
+        return;
+      }
+
+      // If state contains specific route, navigate back to it
+      if (e.state && e.state.route) {
+        if (e.state.classId) {
+          guruView.selectedClassId = e.state.classId;
+        } else {
+          guruView.selectedClassId = null;
+        }
+        this.navigate(e.state.route, false);
+        return;
+      }
+
+      // Fallback: return to root tab for current user role
+      const user = auth.getCurrentUser();
+      if (user) {
+        const rootTab = user.role === 'guru' ? 'classes' : (user.role === 'developer' ? 'accounts' : 'home');
+        if (this.currentRoute !== rootTab) {
+          this.navigate(rootTab, false);
+        }
+      }
+    });
+
+    // Listen via Capacitor App plugin (Android Native APK)
     if (window.Capacitor?.Plugins?.App) {
       window.Capacitor.Plugins.App.addListener('backButton', () => {
         handleBack();
@@ -170,14 +243,23 @@ class App {
     }, false);
   }
 
-  navigate(route) {
+  navigate(route, pushHistory = true) {
+    if (pushHistory && window.history && route !== this.currentRoute) {
+      window.history.pushState({ route: route }, '', window.location.href);
+    }
     this.currentRoute = route;
     this.currentSurahDetail = null;
+    if (guruView.selectedClassId) {
+      guruView.selectedClassId = null;
+    }
     this.render();
     if (this.viewport) this.viewport.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  openSurahDetail(surahNumber) {
+  openSurahDetail(surahNumber, pushHistory = true) {
+    if (pushHistory && window.history) {
+      window.history.pushState({ route: 'quran-detail', surah: surahNumber }, '', window.location.href);
+    }
     this.currentRoute = 'quran-detail';
     this.currentSurahDetail = surahNumber;
     this.render();
@@ -226,16 +308,18 @@ class App {
     };
 
     const roleLabels = {
-      santri: 'Santri',
+      santri: 'Murid',
       guru: 'Guru',
       developer: 'Admin'
     };
 
     this.header.innerHTML = `
       <div class="header-brand">
-        <div class="header-logo">TT</div>
+        <div class="header-logo">
+          <img src="./assets/icons/logo-sekolah.png" alt="Logo MI Al-Hidayah 1">
+        </div>
         <div class="header-title-group">
-          <h1>Tahfidz Tracker</h1>
+          <h1>MI Al-Hidayah 1</h1>
           <div class="header-subtitle">${user.nama}</div>
         </div>
       </div>
@@ -277,26 +361,31 @@ class App {
         }
       ];
     } else if (user.role === 'guru') {
-      // Guru Navigation Tabs
+      // Guru Navigation Tabs (Kelas & Murid, Murotal, Laporan, Profil)
       tabs = [
         {
           id: 'classes',
-          label: 'Kelas & Santri',
+          label: 'Kelas & Murid',
           icon: `<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
         },
         {
-          id: 'history',
-          label: 'Riwayat Validasi',
-          icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>`
+          id: 'quran',
+          label: 'Al-Qur\'an',
+          icon: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`
+        },
+        {
+          id: 'reports',
+          label: 'Laporan',
+          icon: `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
         },
         {
           id: 'profile',
-          label: 'Profil Guru',
+          label: 'Profil',
           icon: `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
         }
       ];
     } else if (user.role === 'developer') {
-      // Developer Navigation Tabs
+      // Developer / Super Admin Tabs
       tabs = [
         {
           id: 'accounts',
@@ -304,9 +393,14 @@ class App {
           icon: `<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>`
         },
         {
+          id: 'classes',
+          label: 'Kelola Kelas',
+          icon: `<svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>`
+        },
+        {
           id: 'overview',
           label: 'Monitoring',
-          icon: `<svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>`
+          icon: `<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>`
         },
         {
           id: 'profile',
@@ -383,8 +477,25 @@ class App {
         guruView.initClassesEvents();
         break;
 
+      case 'quran':
+        this.viewport.innerHTML = await santriView.renderQuran();
+        await santriView.initQuranEvents();
+        break;
+
+      case 'quran-detail':
+        this.viewport.innerHTML = await santriView.renderSurahDetailView(this.currentSurahDetail || 114);
+        santriView.initSurahDetailEvents(this.currentSurahDetail || 114);
+        break;
+
+      case 'murotal':
+        this.viewport.innerHTML = await guruView.renderMurotal();
+        guruView.initMurotalEvents();
+        break;
+
+      case 'reports':
       case 'history':
-        this.viewport.innerHTML = guruView.renderHistory();
+        this.viewport.innerHTML = guruView.renderReports();
+        guruView.initReportsEvents();
         break;
 
       case 'profile':
@@ -407,6 +518,11 @@ class App {
         adminView.initAccountsEvents();
         break;
 
+      case 'classes':
+        this.viewport.innerHTML = adminView.renderClasses();
+        adminView.initClassesEvents();
+        break;
+
       case 'overview':
         this.viewport.innerHTML = adminView.renderOverview();
         break;
@@ -423,10 +539,18 @@ class App {
   }
 
   // --- Bottom Sheet Modal System ---
-  showBottomSheet(title, htmlContent) {
+  showBottomSheet(title, htmlContent, customClass = '', footerContent = '') {
     if (!this.sheetBackdrop) return;
+
+    if (window.history && !window.history.state?.modal) {
+      window.history.pushState({ modal: true, prevRoute: this.currentRoute }, '', window.location.href);
+    }
+
+    const hasFooterClass = footerContent ? 'has-footer' : '';
+    const combinedClass = [customClass, hasFooterClass].filter(Boolean).join(' ');
+
     this.sheetBackdrop.innerHTML = `
-      <div class="bottom-sheet">
+      <div class="bottom-sheet ${combinedClass}">
         <div class="sheet-handle"></div>
         <div class="sheet-header">
           <span class="sheet-title">${title}</span>
@@ -437,6 +561,7 @@ class App {
         <div class="sheet-body">
           ${htmlContent}
         </div>
+        ${footerContent ? `<div class="sheet-footer">${footerContent}</div>` : ''}
       </div>
     `;
 
@@ -448,9 +573,13 @@ class App {
     }
   }
 
-  closeBottomSheet() {
+  closeBottomSheet(fromPopState = false) {
     if (this.sheetBackdrop) {
       this.sheetBackdrop.classList.remove('active');
+    }
+    if (!fromPopState && window.history && window.history.state?.modal) {
+      this.isPoppingModal = true;
+      window.history.back();
     }
   }
 
