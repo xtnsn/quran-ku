@@ -757,6 +757,27 @@ class Store {
     return Array.from(studentMap.values());
   }
 
+  // --- Students Taught by Guru ---
+  getStudentsByGuru(guruId) {
+    if (!guruId) return [];
+    const myClasses = this.getClasses(guruId);
+    const studentMap = new Map();
+
+    myClasses.forEach(cls => {
+      const students = this.getStudentsInClass(cls.id);
+      students.forEach(st => {
+        if (!studentMap.has(st.id) && st.status_aktif !== false) {
+          studentMap.set(st.id, {
+            ...st,
+            kelas_nama: st.kelas_nama || cls.nama_kelas
+          });
+        }
+      });
+    });
+
+    return Array.from(studentMap.values()).sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+  }
+
   getStudentClass(santriId) {
     const link = this.data.santri_kelas.find(sk => sk.santri_id === santriId && !sk.tanggal_keluar);
     if (link) {
@@ -1126,29 +1147,23 @@ class Store {
   getHafalanReport({ period = 'all', startDate = null, endDate = null, classId = null, guruId = null, studentId = null }) {
     let history = [...this.data.riwayat_setoran];
 
+    // Filter by guru's students (only include students taught by this teacher)
+    if (guruId) {
+      const myStudents = this.getStudentsByGuru(guruId);
+      const myStudentIds = new Set(myStudents.map(s => s.id));
+      history = history.filter(h => myStudentIds.has(h.santri_id));
+    }
+
+    // Filter by specific class if selected
+    if (classId) {
+      const classStudents = this.getStudentsInClass(classId);
+      const classStudentIds = new Set(classStudents.map(s => s.id));
+      history = history.filter(h => classStudentIds.has(h.santri_id));
+    }
+
     // Filter by specific student
     if (studentId) {
       history = history.filter(h => h.santri_id === studentId);
-    } else if (guruId) {
-      // Find classes taught by this guru
-      const myClasses = this.getClasses(guruId);
-      const myClassIds = new Set(myClasses.map(c => c.id));
-      const myClassNames = new Set(myClasses.map(c => c.nama_kelas.toLowerCase()));
-      
-      const myStudentIds = new Set();
-      this.data.users.forEach(u => {
-        if (u.role === 'santri' && u.kelas_nama && myClassNames.has(u.kelas_nama.toLowerCase())) {
-          myStudentIds.add(u.id);
-        }
-      });
-      this.data.santri_kelas.forEach(sk => {
-        if (myClassIds.has(sk.kelas_id) && !sk.tanggal_keluar) {
-          myStudentIds.add(sk.santri_id);
-        }
-      });
-
-      // Include setoran validated by this guru OR belonging to students in this guru's classes
-      history = history.filter(h => h.guru_id === guruId || myStudentIds.has(h.santri_id));
     }
 
     const now = new Date();
@@ -1188,13 +1203,6 @@ class Store {
         className: className || 'Kelas Belum Ditentukan'
       };
     });
-
-    if (classId) {
-      const targetClass = this.getClassById(classId);
-      if (targetClass) {
-        mapped = mapped.filter(item => item.className.toLowerCase() === targetClass.nama_kelas.toLowerCase());
-      }
-    }
 
     return mapped;
   }

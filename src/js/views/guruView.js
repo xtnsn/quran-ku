@@ -651,12 +651,12 @@ export const guruView = {
       for (let a = 1; a <= sInfo.jumlahAyat; a++) {
         const isHafal = store.isVerseMemorized(studentId, surahNum, a);
         versesHtml += `
-          <label class="verse-chk-item ${isHafal ? 'hafal' : ''}" style="display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border: 1px solid ${isHafal ? 'var(--color-success)' : 'var(--border-color)'}; border-radius: var(--radius-sm); background: ${isHafal ? 'rgba(46, 204, 113, 0.08)' : '#FFFFFF'}; cursor: pointer;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="chk-single-ayat" value="${a}" style="width: 16px; height: 16px; accent-color: var(--color-primary);" ${isHafal ? 'checked disabled' : ''}>
-              <span style="font-size: 13px; font-weight: 600; color: var(--text-dark);">Ayat ${a}</span>
+          <label class="verse-chk-item ${isHafal ? 'hafal' : ''}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1.5px solid ${isHafal ? 'var(--color-success)' : 'var(--border-color)'}; border-radius: var(--radius-md); background: ${isHafal ? 'rgba(46, 204, 113, 0.08)' : '#FFFFFF'}; cursor: pointer; transition: all 0.15s ease;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" class="chk-single-ayat" value="${a}" style="width: 18px; height: 18px; accent-color: var(--color-primary); cursor: pointer;" ${isHafal ? 'checked disabled' : ''}>
+              <span style="font-size: 13.5px; font-weight: 700; color: var(--text-dark);">Ayat ${a}</span>
             </div>
-            ${isHafal ? `<span style="font-size: 11px; font-weight: 700; color: var(--color-success);">✓ Hafal</span>` : `<span style="font-size: 11px; color: var(--text-muted);">-</span>`}
+            ${isHafal ? `<span style="font-size: 11px; font-weight: 700; color: var(--color-success); background: rgba(46, 204, 113, 0.15); padding: 2px 7px; border-radius: var(--radius-full);">✓ Hafal</span>` : `<span style="font-size: 11px; color: var(--text-muted); padding: 2px 6px;">Belum</span>`}
           </label>
         `;
       }
@@ -664,34 +664,34 @@ export const guruView = {
       return `
         <div>
           <!-- Surah Header Card in per-ayat -->
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--color-primary-soft); border-radius: var(--radius-sm); margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--color-primary-soft); border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid rgba(46, 134, 222, 0.2);">
             <div>
-              <strong style="font-size: 13.5px; color: var(--text-primary);">${sInfo.nomor}. Surat ${sInfo.namaLatin}</strong>
-              <div style="font-size: 11.5px; color: var(--text-muted);">${sInfo.jumlahAyat} Ayat • ${sInfo.arti || ''}</div>
+              <strong style="font-size: 14px; color: var(--text-primary);">${sInfo.nomor}. Surat ${sInfo.namaLatin}</strong>
+              <div style="font-size: 12px; color: var(--text-muted);">${sInfo.jumlahAyat} Ayat • ${sInfo.arti || ''}</div>
             </div>
-            <span class="badge ${isDone ? 'badge-success' : 'badge-primary'}">${memCount}/${sInfo.jumlahAyat} Ayat Hafal</span>
+            <span class="badge ${isDone ? 'badge-success' : 'badge-primary'}" style="font-size: 12px; padding: 6px 10px;">${memCount}/${sInfo.jumlahAyat} Ayat Hafal</span>
           </div>
 
           <!-- Quick Action Buttons for Verses -->
-          <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; gap: 6px;">
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-pick-remaining" style="font-size: 11px; padding: 4px 8px;">Pilih Sisa</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-pick-all" style="font-size: 11px; padding: 4px 8px;">Pilih Semua</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-clear" style="font-size: 11px; padding: 4px 8px;">Batal</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-pick-remaining" style="font-size: 11.5px; padding: 5px 10px; font-weight: 600;">Pilih Sisa</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-pick-all" style="font-size: 11.5px; padding: 5px 10px; font-weight: 600;">Pilih Semua</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-ayat-clear" style="font-size: 11.5px; padding: 5px 10px;">Batal</button>
             </div>
 
             <!-- Range helper -->
-            <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px;">
-              <span>Ayat</span>
-              <input type="number" id="input-range-from" min="1" max="${sInfo.jumlahAyat}" value="1" style="width: 44px; padding: 2px 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center;">
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 12px;">
+              <span style="font-weight: 600;">Ayat</span>
+              <input type="number" id="input-range-from" min="1" max="${sInfo.jumlahAyat}" value="1" style="width: 48px; padding: 4px 6px; border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); text-align: center; font-weight: 700;">
               <span>s/d</span>
-              <input type="number" id="input-range-to" min="1" max="${sInfo.jumlahAyat}" value="${Math.min(sInfo.jumlahAyat, 10)}" style="width: 44px; padding: 2px 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center;">
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-apply-range" style="font-size: 11px; padding: 4px 8px;">Terapkan</button>
+              <input type="number" id="input-range-to" min="1" max="${sInfo.jumlahAyat}" value="${Math.min(sInfo.jumlahAyat, 10)}" style="width: 48px; padding: 4px 6px; border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); text-align: center; font-weight: 700;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-apply-range" style="font-size: 11.5px; padding: 5px 10px; font-weight: 600;">Terapkan</button>
             </div>
           </div>
 
-          <!-- Verses Grid (2 Columns) -->
-          <div id="ayat-grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-height: 200px; overflow-y: auto; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 8px; background: #FAFCFF; margin-bottom: 12px;">
+          <!-- Verses Grid (2 Columns with generous height) -->
+          <div id="ayat-grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-height: 280px; max-height: 48vh; overflow-y: auto; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; background: #FAFCFF; margin-bottom: 14px; -webkit-overflow-scrolling: touch;">
             ${versesHtml}
           </div>
         </div>
@@ -716,21 +716,21 @@ export const guruView = {
 
     const sheetContent = `
       <div>
-        <!-- Student Header -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <!-- Student Header Card -->
+        <div class="card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding: 12px 14px; background: linear-gradient(135deg, #0C447C 0%, #1B68B3 100%); color: #FFFFFF; border: none; box-shadow: var(--shadow-sm);">
           <div>
-            <div style="font-size: 11px; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Validasi Setoran Hafalan</div>
-            <div style="font-size: 17px; font-weight: 800; color: var(--text-dark);">${student.nama}</div>
+            <div style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px; color: rgba(255,255,255,0.8); text-transform: uppercase;">Validasi Setoran Hafalan</div>
+            <div style="font-size: 17px; font-weight: 800; color: #FFFFFF; margin-top: 2px;">${student.nama}</div>
           </div>
-          <span class="badge badge-primary">Kelas ${student.kelas_nama || '-'}</span>
+          <span class="badge" style="background: rgba(255,255,255,0.25); color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 6px 12px;">Kelas ${student.kelas_nama || '-'}</span>
         </div>
 
         <!-- Mode Tabs: Centang Per Surat vs Centang Per Ayat -->
-        <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px;">
-          <button type="button" class="filter-pill active" id="tab-btn-mode-surat" style="flex: 1; text-align: center;">
+        <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 10px;">
+          <button type="button" class="filter-pill active" id="tab-btn-mode-surat" style="flex: 1; text-align: center; font-weight: 700;">
             📋 Centang Per Surat (Banyak Sekaligus)
           </button>
-          <button type="button" class="filter-pill" id="tab-btn-mode-ayat" style="flex: 1; text-align: center;">
+          <button type="button" class="filter-pill" id="tab-btn-mode-ayat" style="flex: 1; text-align: center; font-weight: 700;">
             🔢 Centang Per Ayat (Detail)
           </button>
         </div>
@@ -759,8 +759,8 @@ export const guruView = {
             </label>
           </div>
 
-          <!-- Multi Surah Checkbox List Container -->
-          <div id="multi-surah-list-container" style="height: 150px; max-height: 150px; overflow-y: auto; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 6px 8px; margin-bottom: 8px; background: #FAFCFF;">
+          <!-- Multi Surah Checkbox List Container (Generous flexible height) -->
+          <div id="multi-surah-list-container" style="min-height: 280px; max-height: 52vh; overflow-y: auto; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 12px; background: #FAFCFF; -webkit-overflow-scrolling: touch;">
             ${renderMultiSurahHtml()}
           </div>
 
@@ -775,9 +775,9 @@ export const guruView = {
 
         <!-- SECTION 2: CENTANG PER AYAT (GRANULAR) -->
         <div id="section-mode-ayat" style="display: none;">
-          <div class="form-group" style="margin-bottom: 8px;">
-            <label class="form-label" style="font-size: 12px; font-weight: 700;">Pilih Surat yang Disetorkan</label>
-            <select id="val-ayat-surah-picker" class="form-select">
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: var(--text-dark);">Pilih Surat yang Disetorkan</label>
+            <select id="val-ayat-surah-picker" class="form-select" style="font-weight: 600; padding: 9px 12px;">
               ${surahList.map(s => `
                 <option value="${s.nomor}" ${s.nomor === selectedAyatSurahNum ? 'selected' : ''}>
                   ${s.nomor}. Surat ${s.namaLatin} (${s.jumlahAyat} Ayat)
@@ -786,8 +786,8 @@ export const guruView = {
             </select>
           </div>
 
-          <!-- Per-Ayat Checklist Container -->
-          <div id="per-ayat-container" style="height: 150px; max-height: 150px; overflow-y: auto; margin-bottom: 8px;">
+          <!-- Per-Ayat Checklist Container (Flexible container, no tight 150px limit) -->
+          <div id="per-ayat-container" style="margin-bottom: 8px;">
             ${renderAyatChecklistHtml(selectedAyatSurahNum)}
           </div>
 
@@ -802,7 +802,7 @@ export const guruView = {
       </div>
     `;
 
-    app.showBottomSheet('Form Validasi Hafalan Murid', sheetContent, '', sheetFooter);
+    app.showBottomSheet('Form Validasi Hafalan Murid', sheetContent, 'sheet-fullscreen', sheetFooter);
 
     // --- Tab Switch Logic ---
     const tabSurat = document.getElementById('tab-btn-mode-surat');
@@ -1257,7 +1257,15 @@ export const guruView = {
   renderReports() {
     const guru = auth.getCurrentUser();
     const myClasses = store.getClasses(guru.id);
-    const allStudents = store.getUsersByRole('santri').filter(s => s.status_aktif).sort((a, b) => a.nama.localeCompare(b.nama));
+    const myStudents = store.getStudentsByGuru(guru.id);
+
+    // Sanitize selections so invalid IDs don't persist
+    if (this.selectedReportStudentId && !myStudents.some(s => s.id === this.selectedReportStudentId)) {
+      this.selectedReportStudentId = '';
+    }
+    if (this.reportClassFilter && !myClasses.some(c => c.id === this.reportClassFilter)) {
+      this.reportClassFilter = '';
+    }
 
     const periodLabels = {
       today: 'Hari Ini',
@@ -1285,13 +1293,21 @@ export const guruView = {
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
             <div>
               <h2 style="font-size: 18px; font-weight: 800; color: var(--text-primary);">Laporan Hafalan</h2>
-              <p style="font-size: 12px; color: var(--text-muted);">Data setoran murid MI Al-Hidayah 1</p>
+              <p style="font-size: 12px; color: var(--text-muted);">Data setoran murid binaan Anda (${myStudents.length} murid)</p>
             </div>
             <button class="btn btn-primary btn-sm" id="btn-export-report-pdf" style="background: #10B981; border-color: #10B981;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               <span>Ekspor PDF</span>
             </button>
           </div>
+
+          ${myClasses.length === 0 ? `
+            <div class="card" style="text-align: center; padding: 20px 16px; margin-bottom: 14px; background: #FFFBEB; border-color: #FDE68A;">
+              <div style="font-size: 26px; margin-bottom: 4px;">🏫</div>
+              <div style="font-weight: 700; color: #92400E; font-size: 13.5px; margin-bottom: 3px;">Belum Ada Kelas yang Diampu</div>
+              <div style="font-size: 12px; color: #B45309;">Silakan pilih kelas binaan Anda terlebih dahulu pada tab <strong>Kelas</strong> agar data hafalan murid binaan Anda dapat tampil di sini.</div>
+            </div>
+          ` : ''}
 
           <!-- Report Type Switcher Tabs (2 Jenis Laporan) -->
           <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px;">
@@ -1405,13 +1421,14 @@ export const guruView = {
     // -------------------------------------------------------------
     // JENIS 2: SETORAN HAFALAN PER SISWA
     // -------------------------------------------------------------
-    const selectedStudent = this.selectedReportStudentId ? store.getUserById(this.selectedReportStudentId) : null;
+    const selectedStudent = this.selectedReportStudentId ? myStudents.find(s => s.id === this.selectedReportStudentId) : null;
     let studentReportData = [];
     let studentProgress = null;
 
     if (selectedStudent) {
       studentReportData = store.getHafalanReport({
         studentId: selectedStudent.id,
+        guruId: guru.id,
         period: this.reportPeriod
       });
       studentProgress = store.calculateStudentProgress(selectedStudent.id);
@@ -1425,7 +1442,7 @@ export const guruView = {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div>
             <h2 style="font-size: 18px; font-weight: 800; color: var(--text-primary);">Laporan Hafalan</h2>
-            <p style="font-size: 12px; color: var(--text-muted);">Laporan detail setoran per siswa</p>
+            <p style="font-size: 12px; color: var(--text-muted);">Laporan detail setoran per siswa binaan</p>
           </div>
           ${selectedStudent ? `
             <button class="btn btn-primary btn-sm" id="btn-export-report-pdf" style="background: #10B981; border-color: #10B981;">
@@ -1448,16 +1465,22 @@ export const guruView = {
         <!-- Student Selector Dropdown -->
         <div class="card" style="margin-bottom: 14px; padding: 14px; border-color: rgba(46, 134, 222, 0.3); background: #F8FAFC;">
           <label class="form-label" style="font-size: 13px; font-weight: 700; color: var(--color-primary); margin-bottom: 6px;">
-            Pilih Siswa untuk Melihat Laporan:
+            Pilih Siswa Binaan untuk Melihat Laporan:
           </label>
-          <select id="select-report-student" class="form-select" style="font-size: 13.5px; padding: 10px 12px; font-weight: 600;">
-            <option value="">-- Ketuk di Sini untuk Memilih Siswa --</option>
-            ${allStudents.map(st => `
-              <option value="${st.id}" ${this.selectedReportStudentId === st.id ? 'selected' : ''}>
-                ${st.nama} (${st.kelas_nama ? `Kelas ${st.kelas_nama}` : 'Tanpa Kelas'})
-              </option>
-            `).join('')}
-          </select>
+          ${myStudents.length > 0 ? `
+            <select id="select-report-student" class="form-select" style="font-size: 13.5px; padding: 10px 12px; font-weight: 600;">
+              <option value="">-- Ketuk di Sini untuk Memilih Siswa (${myStudents.length} Murid Binaan) --</option>
+              ${myStudents.map(st => `
+                <option value="${st.id}" ${this.selectedReportStudentId === st.id ? 'selected' : ''}>
+                  ${st.nama} (${st.kelas_nama ? `Kelas ${st.kelas_nama}` : 'Binaan Anda'})
+                </option>
+              `).join('')}
+            </select>
+          ` : `
+            <div style="padding: 12px; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 12.5px; color: #92400E; text-align: center;">
+              ⚠️ Belum ada murid di kelas yang Anda ampu. Silakan pilih kelas atau tambahkan murid pada tab <strong>Kelas</strong> terlebih dahulu.
+            </div>
+          `}
         </div>
 
         ${selectedStudent ? `
@@ -1652,14 +1675,16 @@ export const guruView = {
     // PDF TIPE 2: LAPORAN SETORAN PER SISWA
     // -------------------------------------------------------------
     if (this.reportType === 'student') {
-      const student = this.selectedReportStudentId ? store.getUserById(this.selectedReportStudentId) : null;
+      const myStudents = store.getStudentsByGuru(guru.id);
+      const student = this.selectedReportStudentId ? myStudents.find(s => s.id === this.selectedReportStudentId) : null;
       if (!student) {
-        alert('Silakan pilih siswa terlebih dahulu dari menu dropdown untuk mencetak laporan per siswa.');
+        alert('Silakan pilih siswa binaan Anda terlebih dahulu dari menu dropdown untuk mencetak laporan per siswa.');
         return;
       }
 
       const studentReportData = store.getHafalanReport({
         studentId: student.id,
+        guruId: guru.id,
         period: this.reportPeriod
       });
 

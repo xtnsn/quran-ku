@@ -280,6 +280,43 @@
   z-index: 20;
 }
 
+/* Full-Screen Sheet Modal (e.g. Validasi Hafalan Murid) */
+.bottom-sheet.sheet-fullscreen {
+  height: 100dvh;
+  max-height: 100dvh;
+  height: 100vh;
+  max-height: 100vh;
+  border-radius: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+.bottom-sheet.sheet-fullscreen .sheet-handle {
+  display: none;
+}
+
+.bottom-sheet.sheet-fullscreen .sheet-header {
+  padding: 12px 16px;
+  background-color: var(--bg-surface);
+  border-bottom: 1.5px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.bottom-sheet.sheet-fullscreen .sheet-body {
+  padding: 14px 16px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-sheet.sheet-fullscreen.has-footer .sheet-footer {
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 6px)) 16px;
+  background: var(--bg-surface);
+  border-top: 1.5px solid var(--border-color);
+  box-shadow: 0 -4px 16px rgba(12, 68, 124, 0.08);
+  flex-shrink: 0;
+}
+
 /* Toast Notifications */
 #toast-container {
   position: absolute;
