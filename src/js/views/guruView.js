@@ -699,17 +699,23 @@ export const guruView = {
     };
 
     const sheetFooter = `
-      <div id="footer-mode-surat" style="width: 100%;">
+      <div id="footer-mode-surat" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
         <button type="button" class="btn btn-success btn-lg" id="btn-submit-multi-surah" style="width: 100%; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); font-weight: 800; opacity: 0.6; cursor: not-allowed;" disabled>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
           <span>Pilih Surat untuk Disimpan</span>
         </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-val-surat" style="width: 100%; font-weight: 600; color: var(--text-muted); background: #F1F5F9; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: var(--radius-md);">
+          ✕ Batal & Keluar
+        </button>
       </div>
 
-      <div id="footer-mode-ayat" style="display: none; width: 100%;">
+      <div id="footer-mode-ayat" style="display: none; width: 100%; flex-direction: column; gap: 8px;">
         <button type="button" class="btn btn-primary btn-lg" id="btn-submit-single-ayat" style="width: 100%; box-shadow: 0 4px 14px rgba(46, 134, 222, 0.35); font-weight: 800;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
           <span>Simpan Hafalan Ayat Terpilih</span>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-val-ayat" style="width: 100%; font-weight: 600; color: var(--text-muted); background: #F1F5F9; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: var(--radius-md);">
+          ✕ Batal & Keluar
         </button>
       </div>
     `;
@@ -802,7 +808,7 @@ export const guruView = {
       </div>
     `;
 
-    app.showBottomSheet('Form Validasi Hafalan Murid', sheetContent, 'sheet-fullscreen', sheetFooter);
+    app.showBottomSheet('Form Validasi Hafalan Murid', sheetContent, 'sheet-fullscreen no-top-close', sheetFooter);
 
     // --- Tab Switch Logic ---
     const tabSurat = document.getElementById('tab-btn-mode-surat');
@@ -832,7 +838,7 @@ export const guruView = {
         const fSurat = document.getElementById('footer-mode-surat');
         const fAyat = document.getElementById('footer-mode-ayat');
         if (fSurat) fSurat.style.display = 'none';
-        if (fAyat) fAyat.style.display = 'block';
+        if (fAyat) fAyat.style.display = 'flex';
         attachAyatEvents();
       });
     }
@@ -1098,6 +1104,14 @@ export const guruView = {
       app.closeBottomSheet();
       app.showToast(`🎉 Berhasil memvalidasi ${ayatList.length} ayat Surat ${sName} untuk ${student.nama}!`, 'success');
       app.render();
+    });
+
+    // Cancel / Exit Handlers
+    document.getElementById('btn-cancel-val-surat')?.addEventListener('click', () => {
+      app.closeBottomSheet();
+    });
+    document.getElementById('btn-cancel-val-ayat')?.addEventListener('click', () => {
+      app.closeBottomSheet();
     });
   },
 

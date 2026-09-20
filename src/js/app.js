@@ -549,14 +549,28 @@ class App {
     const hasFooterClass = footerContent ? 'has-footer' : '';
     const combinedClass = [customClass, hasFooterClass].filter(Boolean).join(' ');
 
+    if (customClass.includes('sheet-fullscreen')) {
+      this.sheetBackdrop.classList.add('has-fullscreen');
+    } else {
+      this.sheetBackdrop.classList.remove('has-fullscreen');
+    }
+
+    const hideTopClose = customClass.includes('no-top-close') || customClass.includes('sheet-fullscreen');
+
     this.sheetBackdrop.innerHTML = `
       <div class="bottom-sheet ${combinedClass}">
         <div class="sheet-handle"></div>
         <div class="sheet-header">
           <span class="sheet-title">${title}</span>
-          <button class="btn btn-secondary btn-icon btn-sm" id="btn-close-sheet" style="width: 30px; height: 30px;">
-            &times;
+          ${!hideTopClose ? `
+          <button class="btn btn-secondary btn-sm" id="btn-close-sheet" aria-label="Tutup dan Keluar" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: var(--radius-full); background: #F1F5F9; color: var(--text-dark); border: 1px solid var(--border-color); cursor: pointer; flex-shrink: 0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            <span>Tutup</span>
           </button>
+          ` : ''}
         </div>
         <div class="sheet-body">
           ${htmlContent}
@@ -576,6 +590,7 @@ class App {
   closeBottomSheet(fromPopState = false) {
     if (this.sheetBackdrop) {
       this.sheetBackdrop.classList.remove('active');
+      this.sheetBackdrop.classList.remove('has-fullscreen');
     }
     if (!fromPopState && window.history && window.history.state?.modal) {
       this.isPoppingModal = true;

@@ -281,25 +281,44 @@
 }
 
 /* Full-Screen Sheet Modal (e.g. Validasi Hafalan Murid) */
+.sheet-backdrop.has-fullscreen,
+.sheet-backdrop:has(.sheet-fullscreen) {
+  align-items: flex-start !important;
+  padding-bottom: 0 !important;
+}
+
 .bottom-sheet.sheet-fullscreen {
-  height: 100dvh;
-  max-height: 100dvh;
-  height: 100vh;
-  max-height: 100vh;
-  border-radius: 0;
-  margin-bottom: 0;
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: 100% !important;
+  height: 100dvh !important;
+  max-height: 100% !important;
+  max-height: 100dvh !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
   box-shadow: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .bottom-sheet.sheet-fullscreen .sheet-handle {
-  display: none;
+  display: none !important;
 }
 
 .bottom-sheet.sheet-fullscreen .sheet-header {
   padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
   background-color: var(--bg-surface);
   border-bottom: 1.5px solid var(--border-color);
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.bottom-sheet.sheet-fullscreen .sheet-header #btn-close-sheet,
+.bottom-sheet.no-top-close .sheet-header #btn-close-sheet {
+  display: none !important;
 }
 
 .bottom-sheet.sheet-fullscreen .sheet-body {
@@ -307,6 +326,7 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 0;
 }
 
 .bottom-sheet.sheet-fullscreen.has-footer .sheet-footer {

@@ -44,10 +44,6 @@ export function renderLoginView() {
           </button>
         </form>
       </div>
-
-      <div style="text-align: center; margin-top: 16px; font-size: 11.5px; color: var(--text-muted);">
-        🔒 Pendaftaran mandiri ditiadakan. Semua akun dibuat oleh Developer/Super Admin (PRD v2).
-      </div>
     </div>
   `;
 }
