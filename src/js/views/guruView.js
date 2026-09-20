@@ -584,9 +584,9 @@ export const guruView = {
     const juz1To29Surahs = surahList.filter(s => s.nomor < 78).sort((a, b) => a.nomor - b.nomor);
 
     let activeTab = 'per-surat'; // 'per-surat' | 'per-ayat'
-    let multiFilter = 'juz30';   // 'juz30' | 'juz1-29' | 'all'
+    let multiFilter = 'all';     // Default 'all' (Semua Surat 114) agar guru langsung melihat seluruh surat
     let hideCompleted = false;   // Default false so completed surahs are clearly visible with [✓ Lunas]!
-    let selectedAyatSurahNum = 78; // Default An-Naba' for per-ayat
+    let selectedAyatSurahNum = 1; // Default Surat 1 (Al-Fatihah) for per-ayat
 
     // Render Tab 1 HTML (Multi-Surah Checklist)
     const renderMultiSurahHtml = () => {
@@ -746,9 +746,9 @@ export const guruView = {
           <!-- Filter and Select Controls -->
           <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px;">
             <div style="display: flex; gap: 4px;">
-              <button type="button" class="btn btn-primary btn-sm" id="btn-val-filter-juz30" style="padding: 4px 8px; font-size: 11px;">Juz 30 (78-114)</button>
+              <button type="button" class="btn btn-primary btn-sm" id="btn-val-filter-all" style="padding: 4px 8px; font-size: 11px;">Semua Surat (114)</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-val-filter-juz30" style="padding: 4px 8px; font-size: 11px;">Juz 30 (78-114)</button>
               <button type="button" class="btn btn-secondary btn-sm" id="btn-val-filter-juz1-29" style="padding: 4px 8px; font-size: 11px;">Juz 1-29 (1-77)</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-val-filter-all" style="padding: 4px 8px; font-size: 11px;">Semua Surat (114)</button>
             </div>
 
             <div style="display: flex; gap: 4px;">

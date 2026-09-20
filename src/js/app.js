@@ -8,7 +8,7 @@ import { store } from './store.js';
 import { audioManager } from './audio.js';
 import { renderLoginView, initLoginEvents } from './views/loginView.js';
 import { santriView } from './views/santriView.js';
-import { guruView } from './views/guruView.js';
+import { guruView } from './views/guruView.js?v=20';
 import { adminView } from './views/adminView.js';
 
 class App {
